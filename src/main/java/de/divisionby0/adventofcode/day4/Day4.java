@@ -5,17 +5,16 @@ import de.divisionby0.adventofcode.day1.Day1;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class Day4 {
 
-    private static String[] MANDATORY_ENTRIES = {"byr","iyr","eyr","hgt","hcl","ecl","pid"};
+    private static final String[] MANDATORY_ENTRIES = {"byr","iyr","eyr","hgt","hcl","ecl","pid"};
 
-    private static String[] EYE_COLORS = {"amb","blu","brn","gry","grn","hzl","oth"};
+    private static final String[] EYE_COLORS = {"amb","blu","brn","gry","grn","hzl","oth"};
 
     public static void main(String[] args) throws IOException {
-        String path = Day1.class.getClassLoader().getResource("day4/input.txt").getPath();
+        String path = Objects.requireNonNull(Day1.class.getClassLoader().getResource("day4/input.txt")).getPath();
 
         List<String> passports = getPassportData(path);
 

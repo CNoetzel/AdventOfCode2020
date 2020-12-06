@@ -8,12 +8,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Day3 {
 
     public static void main(String[] args) throws IOException {
-        String path = Day1.class.getClassLoader().getResource("day3/input.txt").getPath();
+        String path = Objects.requireNonNull(Day1.class.getClassLoader().getResource("day3/input.txt")).getPath();
         List<String> forestLines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
 
         List<List<String>> forest = forestLines.stream()

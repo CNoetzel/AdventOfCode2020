@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Day6 {
 
     public static void main(String[] args) throws IOException {
-        String path = Day1.class.getClassLoader().getResource("day6/input.txt").getPath();
+        String path = Objects.requireNonNull(Day1.class.getClassLoader().getResource("day6/input.txt")).getPath();
         List<String> answerInput = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
 
         // Part 1
