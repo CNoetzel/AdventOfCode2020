@@ -27,31 +27,19 @@ public class Day4 {
         System.out.println("Valid passports part1: " + validPassportsPart1);
 
         // Part 2
-        /*String validInput1 = "eyr:2029 ecl:blu cid:129 byr:1989 iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm";
-        String validInput2 = "eyr:2029 ecl:blu cid:129 byr:1989 iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm";
-        String invalidInput1 = "eyr:1972 cid:100 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926";
-        passports = new ArrayList<>();
-        passports.add(validInput1);
-        passports.add(validInput2);
-        passports.add(invalidInput1);*/
-        long validPassportsPart2 = passports.stream()
-                .filter(passport -> {
-                    // Check if mandatory fields are present
-                    boolean valid = false;
-                    if (Arrays.stream(MANDATORY_ENTRIES).allMatch(passport::contains)) {
-                        // Check details
-                        String[] details = passport.split(" ");
-                        valid = Arrays.asList(details).stream().allMatch(detail -> {
-                            String[] tupel = detail.split(":");
-                            if (tupel.length == 2) {
-                                return isPassportDetailValid(tupel[0], tupel[1]);
-                            }
-                            return false;
-                        });
-                    }
-                    System.out.println("Passport (" + valid + "):"  + passport);
-                    return valid;
-                }).count();
+        long validPassportsPart2 = passports.stream().filter(passport -> {
+            // Check if mandatory fields are present
+            boolean valid = false;
+            if (Arrays.stream(MANDATORY_ENTRIES).allMatch(passport::contains)) {
+                // Check details
+                String[] details = passport.trim().split(" ");
+                valid = Arrays.stream(details).allMatch(detail -> {
+                    String[] keyVal = detail.trim().split(":");
+                    return isPassportDetailValid(keyVal[0], keyVal[1]);
+                });
+            }
+            return valid;
+        }).count();
 
         System.out.println("Valid passports part2: " + validPassportsPart2);
     }
@@ -78,10 +66,10 @@ public class Day4 {
         }
     }
 
-    private static boolean isPassportDetailValid(String key, String value) {
+    protected static boolean isPassportDetailValid(String key, String value) {
         switch (key) {
             case "byr":
-                return Integer.parseInt(value) >= 1920 && Integer.parseInt(value) <= 2020;
+                return Integer.parseInt(value) >= 1920 && Integer.parseInt(value) <= 2002;
             case "iyr":
                 return Integer.parseInt(value) >= 2010 && Integer.parseInt(value) <= 2020;
             case "eyr":
