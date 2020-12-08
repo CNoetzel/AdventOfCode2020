@@ -27,20 +27,20 @@ public class Day7 {
         System.out.println("A shiny gold bag can be found in " + count1 + " other bags.");
 
         // Part 2
-        long count2 = getSize(BAGS.get("shiny gold"));
+        long count2 = getNumberOfContainingBags(BAGS.get("shiny gold"));
         System.out.println("A shiny gold bag contains " + count2 + " other bags.");
     }
 
-    protected static long getSize(Bag bag) {
+    protected static long getNumberOfContainingBags(Bag bag) {
         if (bag.getOtherBags() == null || bag.getOtherBags().isEmpty()) {
             return 0;
         }
-        long ownSize = bag.getOtherBags().size();
-        long childrenSize = 0;
+
+        long childBags = bag.getOtherBags().size();
         for (Bag child : bag.getOtherBags()) {
-            childrenSize += getSize(child);
+            childBags += getNumberOfContainingBags(child);
         }
-        return ownSize + childrenSize;
+        return childBags;
     }
 
     protected static long countBagsWithAtLeastOneMatch(List<Bag> bags, Bag bagToFind) {

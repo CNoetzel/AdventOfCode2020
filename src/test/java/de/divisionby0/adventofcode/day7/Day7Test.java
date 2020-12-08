@@ -107,7 +107,7 @@ public class Day7Test {
                 .findFirst()
                 .orElseGet(null);
 
-        assertEquals(32, Day7.getSize(goldenBag));
+        assertEquals(32, Day7.getNumberOfContainingBags(goldenBag));
     }
 
     private void assertAmountOfBags(int offset, int number, Bag bag, Bag parent) {
