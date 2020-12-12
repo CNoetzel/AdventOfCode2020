@@ -15,11 +15,10 @@ public class Day3 {
 
     public static void main(String[] args) throws IOException {
         String path = Objects.requireNonNull(Day1.class.getClassLoader().getResource("day3/input.txt")).getPath();
-        List<String> forestLines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
-
-        List<List<String>> forest = forestLines.stream()
-                .map(line -> Arrays.asList(line.split("(?!^)")))
-                .collect(Collectors.toList());
+        String[][] forest = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8)
+                .stream()
+                .map(line -> line.split("(?!^)"))
+                .toArray(String[][]::new);
 
         // Part 1
         int slope0 = countTrees(forest, 1,3);
@@ -38,14 +37,14 @@ public class Day3 {
         System.out.println("Number of trees for part 2: " + treesComplex);
     }
 
-    private static int countTrees(List<List<String>> forest, int stepsDown, int stepsRight) {
-        int partialSize = forest.get(0).size();
-        int lastLine = forest.size()-1;
+    private static int countTrees(String[][] forest, int stepsDown, int stepsRight) {
+        int partialSize = forest[0].length;
+        int lastLine = forest.length-1;
         int[] index = {0,0}; // first value is y-axis, second value is x-axis
         int treeCounter = 0;
         while(index[0] <= lastLine) {
             // Check if current position has a tree
-            if (forest.get(index[0]).get(index[1]).equals("#")) {
+            if (forest[index[0]][index[1]].equals("#")) {
                 treeCounter++;
             }
             // Update path
