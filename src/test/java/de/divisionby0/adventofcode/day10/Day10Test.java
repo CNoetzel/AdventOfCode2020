@@ -21,6 +21,7 @@ public class Day10Test {
 
     @Test
     public void testPossibleArrangements() {
-        assertEquals(8, Day10.calculatePossibleArrangements(Arrays.asList(SMALL_INPUT)));
+        Day10.calculatePossibleArrangements(Arrays.asList(SMALL_INPUT));
+        assertEquals(8, Day10.solutions.size());
     }
 }
