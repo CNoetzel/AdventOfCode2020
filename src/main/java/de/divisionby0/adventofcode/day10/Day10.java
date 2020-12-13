@@ -13,7 +13,8 @@ public class Day10 {
 
     private static final int OUTLET_JOLTAGE = 0;
     private static final int DEVICE_JOLTAGE_OFFSET = 3;
-    protected static Set<List<Integer>> solutions = new HashSet<>();
+
+    private static final Map<Integer, Map<List<Integer>, Long>> cache = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         String path = Objects.requireNonNull(Day1.class.getClassLoader().getResource("day10/input.txt")).getPath();
@@ -26,9 +27,9 @@ public class Day10 {
         System.out.println("The following differences were calculated: " + differences);
         System.out.println("The value we are looking for is: " + diffCount[1] * diffCount[3]);
 
-        // Part 2 -> takes very long to calculate
-        calculatePossibleArrangements(adapters);
-        System.out.println("There are " + solutions.size() + " arrangements which connect your device to the outlet.");
+        // Part 2
+        long arrangements = calculatePossibleArrangements(0, adapters);
+        System.out.println("There are " + arrangements + " arrangements which connect your device to the outlet.");
 
     }
 
@@ -51,40 +52,38 @@ public class Day10 {
         return diffCount;
     }
 
-    protected static void calculatePossibleArrangements(List<Integer> sortedListOfAdapters) {
-        solutions.add(sortedListOfAdapters);
-        System.out.println("Current solutions: " + solutions.size());
-        List<Integer> omittableAdapters = findOmittableAdapters(sortedListOfAdapters);
-        for (int i = 0; i < omittableAdapters.size(); i++) {
-            ArrayList<Integer> workingCopy = new ArrayList<>(sortedListOfAdapters);
-            workingCopy.remove(omittableAdapters.get(i));
-            calculatePossibleArrangements(workingCopy);
+    protected static long calculatePossibleArrangements(Integer prevAdapter, List<Integer> remainingAdapters) {
+        if (remainingAdapters.isEmpty()) {
+            return 1L;
         }
+
+        // if count already present return it
+        Long count = getFromCache(prevAdapter, remainingAdapters);
+        if (count != null) {
+            return count;
+        }
+
+        // calculate number of arrangements
+        Integer nextAdapter = remainingAdapters.remove(0);
+        count = calculatePossibleArrangements(nextAdapter, remainingAdapters);
+
+        if (!remainingAdapters.isEmpty() && remainingAdapters.get(0) - prevAdapter <= 3) {
+            count += calculatePossibleArrangements(prevAdapter, remainingAdapters);
+        }
+        remainingAdapters.add(0, nextAdapter);
+        addToCache(prevAdapter, remainingAdapters, count);
+
+        return count;
     }
 
-    private static List<Integer> findOmittableAdapters(List<Integer> sortedListOfAdapters) {
-        List<Integer> omittableAdapters = new ArrayList<>();
-        for (int index = 0; index < sortedListOfAdapters.size(); index++) {
-            if (index == 0) {
-                // compare first adapter to outlet
-                if (isOmittable(OUTLET_JOLTAGE, sortedListOfAdapters.get(index+1))) {
-                    omittableAdapters.add(sortedListOfAdapters.get(index));
-                }
-            } else if (index == sortedListOfAdapters.size()-1) {
-                // compare last adapter to device
-                if (isOmittable(sortedListOfAdapters.get(index-1), sortedListOfAdapters.get(index)+DEVICE_JOLTAGE_OFFSET)) {
-                    omittableAdapters.add(sortedListOfAdapters.get(index));
-                }
-            } else {
-                if (isOmittable(sortedListOfAdapters.get(index-1), sortedListOfAdapters.get(index+1))) {
-                    omittableAdapters.add(sortedListOfAdapters.get(index));
-                }
-            }
-        }
-        return omittableAdapters;
+    private static void addToCache(int previous, List<Integer> remainingAdapters, Long count) {
+        Map<List<Integer>, Long> map = new HashMap<>();
+        map.put(remainingAdapters, count);
+        cache.put(previous, map);
     }
 
-    private static boolean isOmittable(int before, int after) {
-        return after-before <= 3;
+    private static Long getFromCache(int previous, List<Integer> remainingAdapters) {
+        Map<List<Integer>, Long> map = cache.get(previous);
+        return map != null ? map.get(remainingAdapters) : null;
     }
 }

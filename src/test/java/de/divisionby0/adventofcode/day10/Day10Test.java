@@ -2,7 +2,9 @@ package de.divisionby0.adventofcode.day10;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +23,8 @@ public class Day10Test {
 
     @Test
     public void testPossibleArrangements() {
-        Day10.calculatePossibleArrangements(Arrays.asList(SMALL_INPUT));
-        assertEquals(8, Day10.solutions.size());
+        List<Integer> list =  new ArrayList<>();
+        list.addAll(Arrays.asList(SMALL_INPUT));
+        assertEquals(8, Day10.calculatePossibleArrangements(0, list));
     }
 }
